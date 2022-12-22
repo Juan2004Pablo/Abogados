@@ -1,6 +1,8 @@
 <?php
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,9 +16,16 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('auth.login');
 });
 
-Auth::routes();
+Auth::routes(['verify' => true]);
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home')
+    ->middleware('disable')->middleware('auth')->middleware('verified');
+
+Route::resource('user', UserController::class)->names('user')->middleware('auth')
+    ->middleware('verified')->middleware('disable');
+
+Route::get('user/toggle/{user}', [UserController::class, 'toggle'])->name('user.toggle')
+    ->middleware('disable');
