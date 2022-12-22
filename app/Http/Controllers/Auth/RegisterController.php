@@ -44,14 +44,19 @@ class RegisterController extends Controller
     /**
      * Get a validator for an incoming registration request.
      *
-     * @param  array  $data
+     * @param array $data
      * @return \Illuminate\Contracts\Validation\Validator
      */
     protected function validator(array $data)
     {
         return Validator::make($data, [
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'name' => ['required', 'string', 'max:100'],
+            'lastname' => ['required', 'string', 'max:100'],
+            'company' => ['required', 'string', 'min:4', 'max:100'],
+            'identification' => ['required', 'numeric', 'digits_between:8,10', 'unique:users'],
+            'address' => ['required', 'string', 'min:8', 'max:50'],
+            'phone' => ['required', 'numeric', 'digits_between:7,10'],
+            'email' => ['required', 'email:rfc,dns', 'max:250', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
         ]);
     }
@@ -59,14 +64,19 @@ class RegisterController extends Controller
     /**
      * Create a new user instance after a valid registration.
      *
-     * @param  array  $data
+     * @param array $data
      * @return \App\Models\User
      */
-    protected function create(array $data)
+    protected function create(array $data): User
     {
         return User::create([
+            'identification' => $data['identification'],
             'name' => $data['name'],
+            'lastname' => $data['lastname'],
             'email' => $data['email'],
+            'phone' => $data['phone'],
+            'company' => $data['company'],
+            'address' => $data['address'],
             'password' => Hash::make($data['password']),
         ]);
     }

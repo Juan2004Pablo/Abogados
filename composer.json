@@ -6,6 +6,7 @@
     "license": "MIT",
     "require": {
         "php": "^7.3|^8.0",
+        "friendsofphp/php-cs-fixer": "^3.13",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
         "laravel/framework": "^8.75",
@@ -34,6 +35,10 @@
         }
     },
     "scripts": {
+        "test": "vendor/bin/phpunit --verbose --testdox",
+        "test-ci" : "vendor/bin/phpunit --verbose --testdox --log-junit ./test-reports/junit.xml",
+        "phpcs" : "vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.php",
+        "phpcs-validate" : "vendor/bin/php-cs-fixer fix --dry-run --diff",
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
             "@php artisan package:discover --ansi"
