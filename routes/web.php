@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\CalendarController;
+use App\Http\Controllers\EventController;
+use App\Http\Controllers\Reports\SettlementController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
@@ -21,11 +24,18 @@ Route::get('/', function () {
 
 Auth::routes(['verify' => true]);
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home')
-    ->middleware('disable')->middleware('auth')->middleware('verified');
+/*Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home')
+    ->middleware('auth')->middleware('verified');*/
 
 Route::resource('user', UserController::class)->names('user')->middleware('auth')
-    ->middleware('verified')->middleware('disable');
+    ->middleware('verified');
 
-Route::get('user/toggle/{user}', [UserController::class, 'toggle'])->name('user.toggle')
-    ->middleware('disable');
+Route::get('user/toggle/{user}', [UserController::class, 'toggle'])->name('user.toggle');
+
+Route::get('report/settlement', [SettlementController::class, 'download'])->name('report.settlement');
+
+Route::get('home/{mes?}', [CalendarController::class, 'index'])->name('home')
+    ->middleware('auth')->middleware('verified');
+
+Route::resource('event', EventController::class)->names('event')->middleware('auth')
+    ->middleware('verified');
